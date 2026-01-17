@@ -1,110 +1,104 @@
-# Fundable Stellar Client
+# Fundable Stellar
 
-Stellar client for the Fundable Protocol – a decentralized payment platform that enables seamless Web3 payments, streaming, and subscriptions. This client provides the user interface for interacting with Fundable's smart contracts deployed on the Stellar blockchain.
+Stellar client and smart contracts for the Fundable Protocol – a decentralized payment platform enabling seamless Web3 payments, streaming, and subscriptions on the Stellar blockchain.
 
-## Features
-
-- 🌟 Native Stellar blockchain integration
-- 💸 Payment streaming and subscriptions
-- 🔐 Secure wallet connection (Freighter, etc.)
-- 📊 Dashboard for payment management
-- 💱 Offramp to fiat currencies
-- 🌐 Multi-asset support (XLM, USDC, etc.)
-
-## Tech Stack
-
-- **Framework:** Next.js 16 with App Router
-- **Language:** TypeScript 5.9
-- **Styling:** Tailwind CSS v4
-- **UI Components:** Shadcn/ui (new-york style)
-- **Package Manager:** pnpm
-- **Bundler:** Turbopack
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js v18 or higher
-- pnpm v8 or higher
-- Git
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone git@github.com:Fundable-Protocol/stellar_client.git
-cd stellar_client
-```
-
-2. Install dependencies:
-```bash
-pnpm install
-```
-
-3. Create a `.env` file from the example:
-```bash
-cp .env.example .env
-```
-
-4. Configure your environment variables in `.env`:
-```env
-NEXT_PUBLIC_URL=http://localhost:3000
-NEXT_PUBLIC_APP_NAME=Fundable Stellar
-NEXT_PUBLIC_API_URL=<your-backend-api-url>
-NEXT_PUBLIC_STELLAR_NETWORK=testnet
-NEXT_PUBLIC_STELLAR_RPC_URL=<stellar-rpc-url>
-NEXT_PUBLIC_STELLAR_HORIZON_URL=<horizon-url>
-```
-
-5. Start the development server:
-```bash
-pnpm dev
-```
-
-The application will be available at `http://localhost:3000`.
-
-## Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start development server with Turbopack |
-| `pnpm build` | Build production bundle |
-| `pnpm start` | Start production server |
-| `pnpm lint` | Run ESLint |
-
-## Project Structure
+## 🏗️ Project Structure
 
 ```
 stellar_client/
-├── src/
-│   ├── app/           # Next.js App Router pages
-│   ├── components/    # React components
-│   │   ├── ui/        # Shadcn UI components
-│   │   └── modules/   # Feature-specific modules
-│   ├── hooks/         # Custom React hooks
-│   ├── lib/           # Utility functions
-│   ├── services/      # API service layer
-│   ├── types/         # TypeScript type definitions
-│   ├── providers/     # React context providers
-│   ├── store/         # State management
-│   ├── config/        # Configuration files
-│   ├── assets/        # Static assets (fonts, etc.)
-│   ├── middlewares/   # Custom middlewares
-│   ├── policies/      # Access control policies
-│   └── validations/   # Form validation schemas
-├── public/            # Public static assets
-└── ...config files
+├── apps/
+│   └── web/                 # Next.js frontend application
+│       ├── src/
+│       ├── package.json
+│       └── ...
+│
+├── contracts/               # Soroban smart contracts (Rust)
+│   ├── payment-stream/      # Payment streaming contract
+│   ├── distributor/         # Token distribution contract
+│   └── Cargo.toml           # Rust workspace config
+│
+├── packages/
+│   └── sdk/                 # TypeScript SDK for contract interaction
+│
+└── package.json             # Root workspace config
 ```
 
-## Related Repositories
+## 🌟 Features
 
-- [backend-main](https://github.com/Fundable-Protocol/backend-main) - Backend API services
-- [evm_client](https://github.com/Fundable-Protocol/evm_client) - EVM-compatible client
+- **Payment Streaming** - Create and manage continuous token streams
+- **Token Distribution** - Efficiently distribute tokens to multiple recipients
+- **Multi-Asset Support** - USDC, XLM, and other Stellar assets
+- **Offramp Integration** - Convert crypto to fiat currencies
 
-## Contributing
+## 🛠️ Tech Stack
 
-We welcome contributions! Please feel free to submit a Pull Request.
+| Component | Technology |
+|-----------|------------|
+| **Frontend** | Next.js 16, React 19, TypeScript, Tailwind CSS v4 |
+| **Contracts** | Soroban SDK, Rust |
+| **SDK** | TypeScript, @stellar/stellar-sdk |
 
-## License
+## 🚀 Getting Started
 
-This project is part of the Fundable Protocol.
+### Prerequisites
+
+- Node.js v18+
+- pnpm v8+
+- Rust (for contracts)
+- [Soroban CLI](https://soroban.stellar.org/docs/getting-started/setup)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone git@github.com:Fundable-Protocol/stellar_client.git
+cd stellar_client
+
+# Install frontend dependencies
+pnpm install
+
+# Build contracts
+cd contracts && cargo build --release
+```
+
+### Development
+
+```bash
+# Start the web app
+pnpm dev
+
+# Build contracts
+pnpm build:contracts
+
+# Run contract tests
+pnpm test:contracts
+```
+
+## 📦 Packages
+
+### `apps/web`
+Next.js frontend application for interacting with Fundable on Stellar.
+
+### `contracts/payment-stream`
+Soroban contract for creating and managing payment streams with:
+- Stream creation with linear vesting
+- Withdraw, pause, resume, cancel functionality
+- Multi-token support
+
+### `contracts/distributor`
+Soroban contract for token distributions:
+- Equal distribution across recipients
+- Weighted distribution with custom amounts
+
+### `packages/sdk`
+TypeScript SDK for interacting with the deployed contracts.
+
+## 🔗 Related Repositories
+
+- [fundable](https://github.com/Fundable-Protocol/fundable) - Starknet smart contracts
+- [evm_client](https://github.com/Fundable-Protocol/evm_client) - EVM client
+- [backend-main](https://github.com/Fundable-Protocol/backend-main) - Backend API
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) for details.
