@@ -40,7 +40,6 @@ mod test {
         assert_eq!(stream.total_amount, 1000);
         assert_eq!(stream.status, StreamStatus::Active);
 
-        // Check contract balance
         let token_client = token::Client::new(&env, &token);
         assert_eq!(token_client.balance(&contract_id), 1000);
     }
@@ -109,7 +108,6 @@ mod test {
         );
 
         env.ledger().set_timestamp(50);
-
         client.withdraw(&stream_id, &300);
 
         let stream = client.get_stream(&stream_id);
@@ -150,7 +148,6 @@ mod test {
         );
 
         env.ledger().set_timestamp(50);
-
         client.withdraw_max(&stream_id);
 
         let stream = client.get_stream(&stream_id);
@@ -192,7 +189,6 @@ mod test {
 
         env.ledger().set_timestamp(50);
         client.withdraw(&stream_id, &500);
-
         client.cancel_stream(&stream_id);
 
         let stream = client.get_stream(&stream_id);
@@ -203,22 +199,19 @@ mod test {
         assert_eq!(token_client.balance(&contract_id), 0);
     }
 
- #[test]
-#[should_panic(expected = "Error(Contract, #6)")]
-fn test_get_nonexistent_stream() {
-    let env = Env::default();
-    env.mock_all_auths();
+    #[test]
+    #[should_panic(expected = "Error(Contract, #6)")]
+    fn test_get_nonexistent_stream() {
+        let env = Env::default();
+        env.mock_all_auths();
 
-    let admin = Address::generate(&env);
+        let admin = Address::generate(&env);
+        let contract_id = env.register(PaymentStreamContract, ());
+        let client = PaymentStreamContractClient::new(&env, &contract_id);
 
-    let contract_id = env.register(PaymentStreamContract, ());
-    let client = PaymentStreamContractClient::new(&env, &contract_id);
-
-    client.initialize(&admin);
-
-    client.get_stream(&999); // this triggers the panic
-}
-
+        client.initialize(&admin);
+        client.get_stream(&999);
+    }
 
     #[test]
     #[should_panic(expected = "Unauthorized")]
@@ -235,35 +228,41 @@ fn test_get_nonexistent_stream() {
         let contract_id = env.register(PaymentStreamContract, ());
         let client = PaymentStreamContractClient::new(&env, &contract_id);
 
-       env.mock_auths(&[
-    MockAuth {
-        address: &admin,
-        invoke: &MockAuthInvoke {
-            contract: &contract_id,
-            fn_name: "initialize",
-            args: (&admin,).into_val(&env),
-            sub_invokes: &[],
-        },
-    },
-    MockAuth {
-        address: &sender,
-        invoke: &MockAuthInvoke {
-            contract: &contract_id,
-            fn_name: "create_stream",
-            args: (&sender, &recipient, &token, 1000i128, 0u64, 100u64).into_val(&env),
-            sub_invokes: &[
-                // ← This is the critical line you were missing
-                MockAuthInvoke {
-                    contract: &token,
-                    fn_name: "transfer",
-                    args: (&sender, &contract_id, 1000i128).into_val(&env),
+        // Full MockAuth including token mint and transfer
+        env.mock_auths(&[
+            MockAuth {
+                address: &admin,
+                invoke: &MockAuthInvoke {
+                    contract: &contract_id,
+                    fn_name: "initialize",
+                    args: (&admin,).into_val(&env),
                     sub_invokes: &[],
                 },
-            ],
-        },
-    },
-    
-]);
+            },
+            MockAuth {
+                address: &admin,
+                invoke: &MockAuthInvoke {
+                    contract: &token,
+                    fn_name: "mint",
+                    args: (&sender, 1000i128).into_val(&env),
+                    sub_invokes: &[],
+                },
+            },
+            MockAuth {
+                address: &sender,
+                invoke: &MockAuthInvoke {
+                    contract: &contract_id,
+                    fn_name: "create_stream",
+                    args: (&sender, &recipient, &token, 1000i128, 0u64, 100u64).into_val(&env),
+                    sub_invokes: &[MockAuthInvoke {
+                        contract: &token,
+                        fn_name: "transfer",
+                        args: (&sender, &contract_id, 1000i128).into_val(&env),
+                        sub_invokes: &[],
+                    }],
+                },
+            },
+        ]);
 
         client.initialize(&admin);
 
@@ -281,6 +280,7 @@ fn test_get_nonexistent_stream() {
 
         env.ledger().set_timestamp(50);
 
+        // Unauthorized withdraw should panic
         client.withdraw(&stream_id, &300);
     }
 }

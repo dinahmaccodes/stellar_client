@@ -132,7 +132,7 @@ impl PaymentStreamContract {
 
     /// Calculate withdrawable amount for a stream
     pub fn withdrawable_amount(env: Env, stream_id: u64) -> i128 {
-        let mut stream: Stream = Self::get_stream(env.clone(), stream_id);
+        let stream: Stream = Self::get_stream(env.clone(), stream_id);
 
 
         if stream.status != StreamStatus::Active {
