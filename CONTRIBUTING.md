@@ -24,12 +24,12 @@ Unsure where to begin? Look for issues tagged with `good first issue` or `help w
 ### Pull Request Process
 
 1.  **Fork the repository** and create your branch from `main`.
-2.  **Set up your development environment** by following the instructions in `docs/README.md`.
+2.  **Set up your development environment** by following the instructions in `docs/getting-started.md`.
 3.  **Make your changes**. Ensure that your code follows the project's coding style and conventions.
 4.  **Add tests** for any new features or bug fixes.
 5.  **Ensure all tests pass** by running `pnpm test:contracts` and any frontend tests.
 6.  **Update the documentation** (`docs/`) if your changes affect it.
-7.  **Commit your changes** with a clear and descriptive commit message.
+7.  **Commit your changes** following the guidelines in our [Commit Guide](COMMIT_GUIDE.md).
 8.  **Push your branch** to your fork and create a pull request to the `main` branch of the `Fundable-Protocol/stellar_client` repository.
 9.  **Your pull request will be reviewed** by the maintainers. Please be prepared to address any feedback.
 

@@ -25,7 +25,8 @@ stellar_client/
 │   │   └── payment-stream.md
 │   └── frontend/              # Frontend documentation
 │       └── components.md
-│   └── sdk/                 # TypeScript SDK for contract interaction
+├── packages/                  # Monorepo packages
+│   └── sdk/                   # TypeScript SDK for contract interaction
 │
 └── package.json             # Root workspace config
 

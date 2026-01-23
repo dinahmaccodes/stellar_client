@@ -43,6 +43,33 @@ ESLint helps us to prevent bugs and ensure code quality. The configuration can b
 -   **Constants:** Use `UPPER_SNAKE_CASE` for constants that are hardcoded and reused across the application.
     -   `const MAX_RETRIES = 3;`
 
+### Component Structure (Atomic Design)
+
+We follow the principles of Atomic Design to structure our React components. This helps in creating a scalable and maintainable component library.
+
+#### Reusable Components
+
+Reusable components are located in the `src/components` directory and are categorized into the following levels:
+
+-   **Atoms:** The smallest, indivisible UI elements. These are the building blocks of your application.
+    -   **Location:** `src/components/atoms`
+    -   **Examples:** `Button`, `Input`, `Label`, `Icon`
+
+-   **Molecules:** Simple groups of atoms that form a functional unit.
+    -   **Location:** `src/components/molecules`
+    -   **Examples:** `SearchForm` (composed of an `Input` and a `Button`), `SocialLinks`
+
+-   **Organisms:** More complex components that consist of molecules and/or atoms. These form distinct sections of an interface.
+    -   **Location:** `src/components/organisms`
+    -   **Examples:** `Header`, `Footer`, `Sidebar`
+
+#### Page-Specific Components
+
+Components that are specific to a particular page or route should not be placed in the global `components` directory. Instead, they should be located in a `modules` folder within the page's directory.
+
+-   **Location:** `src/app/(pages)/<page-name>/modules`
+-   **Example:** For a user profile page at `src/app/(pages)/profile/page.tsx`, a specific component like `ProfileHeader` would be located at `src/app/(pages)/profile/modules/ProfileHeader.tsx`.
+
 ### Imports
 
 Organize imports at the top of the file in the following order:
