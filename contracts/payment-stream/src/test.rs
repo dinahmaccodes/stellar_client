@@ -284,3 +284,58 @@ mod test {
         client.withdraw(&stream_id, &300);
     }
 }
+#[test]
+fn test_pause_and_resume_stream() {
+    let env = Env::default();
+    env.mock_all_auths(); // simpler than manually mocking every auth
+
+    let admin = Address::generate(&env);
+    let sender = Address::generate(&env);
+    let recipient = Address::generate(&env);
+
+    let sac = env.register_stellar_asset_contract_v2(admin.clone());
+    let token = sac.address();
+
+    let contract_id = env.register(PaymentStreamContract, ());
+    let client = PaymentStreamContractClient::new(&env, &contract_id);
+
+    client.initialize(&admin);
+
+    let token_admin = token::StellarAssetClient::new(&env, &token);
+    token_admin.mint(&sender, &1000);
+
+    let stream_id = client.create_stream(
+        &sender,
+        &recipient,
+        &token,
+        &1000,
+        &0,
+        &100,
+    );
+
+    // Initially stream is active
+    let stream = client.get_stream(&stream_id);
+    assert_eq!(stream.status, StreamStatus::Active);
+
+    // Pause the stream
+    client.pause_stream(&stream_id);
+    let stream = client.get_stream(&stream_id);
+    assert_eq!(stream.status, StreamStatus::Paused);
+
+    // Trying to pause again should panic
+    let result = std::panic::catch_unwind(|| {
+        client.pause_stream(&stream_id);
+    });
+    assert!(result.is_err());
+
+    // Resume the stream
+    client.resume_stream(&stream_id);
+    let stream = client.get_stream(&stream_id);
+    assert_eq!(stream.status, StreamStatus::Active);
+
+    // Trying to resume an active stream should panic
+    let result = std::panic::catch_unwind(|| {
+        client.resume_stream(&stream_id);
+    });
+    assert!(result.is_err());
+}
