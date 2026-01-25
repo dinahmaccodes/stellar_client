@@ -6,9 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { User2 } from "lucide-react";
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
-import Logo from "../../../public/svgs/fundable_logo.svg";
 
-// import { useEVM } from "@/hooks/useEVM";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DistributionIcon from "../svgs/DistributionIcon";
 import DashboardIcon from "../svgs/DashboardIcon";
@@ -83,7 +81,6 @@ const mobileItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { disconnect, isConnected } = useEVM();
   const { setOpenMobile } = useSidebar();
   const isMobile = useIsMobile();
 
@@ -129,7 +126,7 @@ export function AppSidebar() {
       aria-label="Main navigation"
     >
       <Link href="https://fundable.finance">
-        <Image src={Logo} alt="Fundable Logo" priority className="pl-8 mb-12" />
+        <Image src={"/fundable_logo.svg"} alt="Fundable Logo" width={153} height={33} priority className="pl-8 mb-12" />
       </Link>
       <div className="pr-4 pl-5 pb-16 flex-1 flex flex-col justify-between">
         <nav
@@ -175,11 +172,10 @@ export function AppSidebar() {
           </ul>
         </nav>
 
-        {isConnected ? (
+        {true ? (
           <div
             className="text-white flex items-center gap-x-4 cursor-pointer hover:bg-fundable-purple-2 p-2 rounded hover:text-black transition-all active:bg-fundable-purple-2"
             onClick={() => {
-              disconnect();
               setOpenMobile(false);
             }}
           >

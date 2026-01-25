@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { StellarWalletProvider } from "../providers/StellarWalletProvider";
 import { Navbar } from "./components/navbar";
 import { WalletModal } from "./components/wallet-modal";
+import AppProvider from "@/providers/app-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,6 +15,12 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const bricolageGrotesque = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-bricolage-grotesque",
+});
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,12 +35,14 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bricolageGrotesque.variable} antialiased`}
       >
         <StellarWalletProvider>
-          <Navbar />
-          <main className="">{children}</main>
-          <WalletModal />
+          <AppProvider>
+            {/* <Navbar /> */}
+            <main className="">{children}</main>
+            <WalletModal />
+          </AppProvider>
         </StellarWalletProvider>
       </body>
     </html>
