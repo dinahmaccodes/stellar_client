@@ -5,6 +5,7 @@ import { StellarWalletProvider } from "../providers/StellarWalletProvider";
 import { Navbar } from "./components/navbar";
 import { WalletModal } from "./components/wallet-modal";
 import AppProvider from "@/providers/app-provider";
+import { ToastProvider } from "@/providers/ToastProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +45,7 @@ export default function RootLayout({
             <WalletModal />
           </AppProvider>
         </StellarWalletProvider>
+        <ToastProvider />
       </body>
     </html>
   );
