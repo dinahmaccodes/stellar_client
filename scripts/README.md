@@ -8,7 +8,7 @@
 ```
 
 2. **Create Stellar Account**
-   - For testnet: https://developers.stellar.org/docs/networks#friendbot
+   - For testnet: [Friendbot](https://developers.stellar.org/docs/networks#friendbot)
    - For mainnet: Use a secure wallet
 
 3. **Configure Environment**
