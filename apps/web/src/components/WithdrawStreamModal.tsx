@@ -6,13 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogClose, 
-  DialogFooter 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+  DialogFooter
 } from "@/components/ui/dialog"
 import { withdrawStreamSchema, type WithdrawStreamFormData, type StreamRecord } from "@/lib/validations"
 import { StellarService } from "@/lib/stellar"
@@ -57,24 +57,29 @@ export function WithdrawStreamModal({
 
   // Fetch withdrawable amount when modal opens
   useEffect(() => {
-    if (open && stream.id) {
-      setIsLoadingAmount(true)
-      StellarService.getWithdrawableAmount(stream.id)
-        .then(amount => {
-          setWithdrawableAmount(amount)
-          if (useMax) {
-            setValue("amount", amount)
-          }
-        })
-        .catch(error => {
-          console.error("Failed to fetch withdrawable amount:", error)
-          onError?.("Failed to fetch withdrawable amount")
-        })
-        .finally(() => {
-          setIsLoadingAmount(false)
-        })
+    if (!open || !stream.id) return
+
+    let cancelled = false
+    setIsLoadingAmount(true)
+
+    StellarService.getWithdrawableAmount(stream.id)
+      .then(amount => {
+        if (cancelled) return
+        setWithdrawableAmount(amount)
+      })
+      .catch(error => {
+        if (cancelled) return
+        console.error("Failed to fetch withdrawable amount:", error)
+        onError?.("Failed to fetch withdrawable amount")
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingAmount(false)
+      })
+
+    return () => {
+      cancelled = true
     }
-  }, [open, stream.id, setValue, useMax, onError])
+  }, [open, stream.id, onError])
 
   // Update amount when useMax changes
   useEffect(() => {
@@ -131,7 +136,7 @@ export function WithdrawStreamModal({
           <DialogTitle>Withdraw From Stream</DialogTitle>
           <DialogClose onClick={handleClose} />
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Stream Info */}
           <div className="space-y-2 p-3 bg-zinc-800 rounded-lg border border-zinc-700">
@@ -158,7 +163,7 @@ export function WithdrawStreamModal({
           {/* Amount Selection */}
           <div className="space-y-2">
             <Label>Amount ({stream.tokenSymbol})</Label>
-            
+
             <div className="flex gap-2">
               <Button
                 type="button"
@@ -194,17 +199,17 @@ export function WithdrawStreamModal({
                   {...register("amount")}
                   disabled={isSubmitting}
                 />
-                {errors.amount && (
-                  <p className="text-sm text-red-400">{errors.amount.message}</p>
-                )}
               </div>
+            )}
+            {errors.amount && (
+              <p className="text-sm text-red-400">{errors.amount.message}</p>
             )}
           </div>
 
           {/* Withdraw To */}
           <div className="space-y-2">
             <Label>Withdraw To</Label>
-            
+
             <div className="flex gap-2">
               <Button
                 type="button"

@@ -70,7 +70,7 @@ export default function StreamsPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-4">
-            <Link 
+            <Link
               href="/"
               className="text-sm text-zinc-400 hover:text-zinc-50 flex items-center gap-2"
             >
@@ -111,8 +111,10 @@ export default function StreamsPage() {
               ) : (
                 streams.map((stream) => {
                   const progress = StellarService.calculateStreamProgress(stream)
-                  const available = parseFloat(stream.totalAmount) - parseFloat(stream.withdrawnAmount)
-                  
+                  // Calculate vested amount based on progress percentage
+                  const vested = (progress.progressPercentage / 100) * parseFloat(stream.totalAmount)
+                  const available = Math.max(0, vested - parseFloat(stream.withdrawnAmount))
+
                   return (
                     <div key={stream.id} className="border border-zinc-800 rounded-lg p-6 space-y-4 bg-zinc-800/50">
                       <div className="flex justify-between items-start">
@@ -125,11 +127,10 @@ export default function StreamsPage() {
                           </p>
                         </div>
                         <div className="flex gap-2">
-                          <span className={`px-2 py-1 rounded text-xs ${
-                            stream.status === "Active" 
-                              ? "bg-green-900/30 text-green-400 border border-green-800" 
+                          <span className={`px-2 py-1 rounded text-xs ${stream.status === "Active"
+                              ? "bg-green-900/30 text-green-400 border border-green-800"
                               : "bg-zinc-800 text-zinc-400 border border-zinc-700"
-                          }`}>
+                            }`}>
                             {stream.status}
                           </span>
                         </div>
@@ -155,7 +156,7 @@ export default function StreamsPage() {
                       </div>
 
                       <div className="w-full bg-zinc-700 rounded-full h-2">
-                        <div 
+                        <div
                           className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                           style={{ width: `${progress.progressPercentage}%` }}
                         />
@@ -166,7 +167,7 @@ export default function StreamsPage() {
                           <p>Rate: {progress.ratePerHour.toFixed(4)} {stream.tokenSymbol}/hour</p>
                           <p>Time remaining: {progress.timeRemaining}</p>
                         </div>
-                        
+
                         <div className="flex gap-2">
                           <Button
                             variant="outline"

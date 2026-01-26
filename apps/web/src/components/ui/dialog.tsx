@@ -18,8 +18,8 @@ const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div 
-        className="fixed inset-0 bg-black/80" 
+      <div
+        className="fixed inset-0 bg-black/80"
         onClick={() => onOpenChange(false)}
       />
       {children}
@@ -27,9 +27,9 @@ const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children }) => {
   )
 }
 
-const DialogContent: React.FC<DialogContentProps> = ({ 
-  children, 
-  className 
+const DialogContent: React.FC<DialogContentProps> = ({
+  children,
+  className
 }) => (
   <div className={cn("relative bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg w-full mx-4 max-h-[90vh] overflow-y-auto p-6", className)}>
     {children}
@@ -49,9 +49,11 @@ const DialogTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 const DialogClose: React.FC<{ onClick: () => void }> = ({ onClick }) => (
   <button
     onClick={onClick}
+    aria-label="Close dialog"
     className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-zinc-400 hover:text-zinc-50"
   >
     <X className="h-4 w-4" />
+    <span className="sr-only">Close</span>
   </button>
 )
 

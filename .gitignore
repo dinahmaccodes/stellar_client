@@ -56,5 +56,5 @@ Cargo.lock
 # Misc
 .cursor/
 
-# Limitlxx ignore
+# Local issue tracking / scratch notes
 issues/
