@@ -6,7 +6,9 @@
         "dev": "next dev --turbopack",
         "build": "next build",
         "start": "next start",
-        "lint": "eslint"
+        "lint": "eslint",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "dependencies": {
         "@creit.tech/stellar-wallets-kit": "^1.9.5",
@@ -45,6 +47,7 @@
         "eslint": "^9",
         "eslint-config-next": "16.1.2",
         "tailwindcss": "^4",
-        "typescript": "^5"
+        "typescript": "^5",
+        "vitest": "^3.0.0"
     }
 }
