@@ -37,9 +37,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${bricolageGrotesque.variable} antialiased`}
       >
-        <Providers>
-          {children}
-        </Providers>
         <StellarWalletProvider>
           <AppProvider>
             {/* <Navbar /> */}
